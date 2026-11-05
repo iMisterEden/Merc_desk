@@ -36,7 +36,7 @@ class MercenarySerializer(serializers.ModelSerializer):
 class ContractSerializer(serializers.ModelSerializer):
     status_display = serializers.CharField(source="get_status_display", read_only=True)
     assigned_to_detail = MercenarySerializer(source="assigned_to", read_only=True)
-    tags_detail = TagSerializer(source="tags", many=True, read_only=True)
+    tags_detail = TagSerializer(source="tags", many=True, read_only=True, required=False)
 
     class Meta:
         model = Contract
@@ -57,6 +57,7 @@ class ContractSerializer(serializers.ModelSerializer):
     def validate_reward(self, value):
         if value < 50:
             raise serializers.ValidationError("Награда не может быть меньше 50 золотых монет!")
+        return value
 
     def validate(self, attrs):
         assigned_to = attrs.get("assigned_to")
